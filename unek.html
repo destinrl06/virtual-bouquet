@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ruang Unek-Unek</title>
+    <link rel="stylesheet" href="css/unek.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Indie+Flower&family=Lora:ital,wght@0,500;0,600;0,700;1,400;1,600;1,700&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <main class="unek-shell">
+        <section class="unek-card" aria-labelledby="unek-title">
+            <div class="unek-flower" aria-hidden="true"></div>
+            <p class="unek-eyebrow">ruang aman untuk hatimu</p>
+            <h1 id="unek-title" class="unek-title">Ruang Unek-Unek </h1>
+            <p class="unek-subtitle">Keluarkan semua rasa lelah, kesal, atau rahasia yang mengganjal di hatimu. Tanpa nama, tanpa jejak—100% anonim.</p>
+
+            <form id="unekForm" action="https://formspree.io/f/xkjgrprb" method="POST">
+                <label for="mood">Pilih mood atau kategorinya</label>
+                <select id="mood" name="mood" required>
+                    <option value="" disabled selected>Pilih yang paling menggambarkan rasamu</option>
+                    <option value="Lelah / Burnout">Lelah / Burnout</option>
+                    <option value="Sedih / Galau"> Sedih / Galau</option>
+                    <option value="Kesal / Sambat">Kesal / Sambat</option>
+                    <option value="Rahasia Terpendam">Rahasia Terpendam</option>
+                </select>
+
+                <label for="unek-unek">Ceritakan isi hatimu</label>
+                <textarea id="unek-unek" name="unek_unek" placeholder="Tuliskan semua unek-unekmu di sini secara bebas..." rows="6" required></textarea>
+
+                <button type="submit" class="unek-submit">Lepaskan Unek-Unek </button>
+            </form>
+
+            <a class="unek-home" href="index.html">Kembali ke Menu Utama</a>
+        </section>
+    </main>
+
+    <div id="success-modal" class="success-modal" hidden role="status" aria-live="polite">
+        <div class="success-dialog">
+            <div class="success-icon" aria-hidden="true"></div>
+            <p>Unek-unekmu sudah terlepas. Tarik napas perlahan, kamu sudah berjuang hebat hari ini! 🌸</p>
+            <button type="button" id="close-success">Terima kasih</button>
+        </div>
+    </div>
+
+    <script>
+        const unekForm = document.getElementById('unekForm');
+        const successModal = document.getElementById('success-modal');
+        const closeSuccess = document.getElementById('close-success');
+
+        unekForm.addEventListener('submit', async function (event) {
+            event.preventDefault();
+            const submitButton = unekForm.querySelector('button[type="submit"]');
+            submitButton.disabled = true;
+            submitButton.textContent = 'Melepaskan...';
+
+            try {
+                const response = await fetch(unekForm.action, {
+                    method: 'POST',
+                    body: new FormData(unekForm),
+                    headers: { Accept: 'application/json' }
+                });
+
+                if (!response.ok) throw new Error('Formspree submission failed');
+                unekForm.reset();
+                successModal.hidden = false;
+            } catch (error) {
+                alert('Maaf, unek-unekmu belum terkirim. Silakan coba lagi sebentar.');
+            } finally {
+                submitButton.disabled = false;
+                submitButton.textContent = 'Lepaskan Unek-Unek ✨';
+            }
+        });
+
+        closeSuccess.addEventListener('click', function () {
+            successModal.hidden = true;
+        });
+
+        successModal.addEventListener('click', function (event) {
+            if (event.target === successModal) successModal.hidden = true;
+        });
+    </script>
+</body>
+</html>

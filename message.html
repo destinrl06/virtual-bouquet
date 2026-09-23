@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Secret Message for Someone Special</title>
+    <link rel="stylesheet" href="css/landing.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Indie+Flower&family=Lora:ital,wght@0,500;0,600;0,700;1,400;1,600;1,700&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <main class="landing-shell message-shell">
+        <section class="message-card landing-card" aria-labelledby="message-title">
+            <div class="message-icon" aria-hidden="true">
+                <svg viewBox="0 0 48 48" role="img" aria-label="Ikon surat">
+                    <rect x="6" y="10" width="36" height="28" rx="4"></rect>
+                    <path d="m8 14 16 13L40 14"></path>
+                </svg>
+            </div>
+            <h1 id="message-title">Secret Message for Someone Special</h1>
+            <p class="message-subtitle">Tulis ungkapan hati atau pesan manismu secara rahasia tanpa nama pengirim.</p>
+
+            <form id="secret-message-form" class="secret-form">
+                <label for="recipient">Untuk Siapa (Nama Panggilan/Inisial)</label>
+                <input id="recipient" name="recipient" type="text" placeholder="Contoh: A atau Sayang" required>
+
+                <label for="destination">Tujuan Pengiriman (Nomor WA / Username Instagram)</label>
+                <input id="destination" name="destination" type="text" placeholder="Contoh: 081234567890 atau @username" required>
+
+                <label for="message">Isi Pesan Manis</label>
+                <textarea id="message" name="message" rows="5" placeholder="Tulis pesan rahasiamu di sini" required></textarea>
+
+                <button type="submit" class="btn-build">Generate Secret Link</button>
+                <button type="button" id="btnSendWA" class="btn-wa">Kirim via Kurir Rahasia (WhatsApp)</button>
+            </form>
+
+            <section id="envelope-view" class="envelope-view" hidden aria-live="polite">
+                <p class="envelope-hint">Ada surat kecil untukmu. Klik amplopnya untuk membuka</p>
+                <button id="envelope-button" class="envelope-button" type="button" aria-label="Buka surat rahasia">
+                    <span class="envelope-flap">⌃</span>
+                    <span class="envelope-paper">OPEN</span>
+                </button>
+                <article id="secret-letter" class="secret-letter" hidden>
+                    <h2 class="letter-recipient"></h2>
+                    <p class="letter-message"></p>
+                    <p class="letter-signoff">Dikirim diam-diam, dari seseorang yang peduli</p>
+                </article>
+            </section>
+
+            <a href="index.html" class="btn-home">Kembali ke Home</a>
+        </section>
+    </main>
+    <footer class="landing-footer">
+        <p class="watermark">made with love by desnur • 2026</p>
+    </footer>
+
+    <script>
+        const form = document.getElementById('secret-message-form');
+        const envelopeView = document.getElementById('envelope-view');
+        const envelopeButton = document.getElementById('envelope-button');
+        const secretLetter = document.getElementById('secret-letter');
+        const btnSendWA = document.getElementById('btnSendWA');
+        const ADMIN_WA = '6285126203798';
+
+        const params = new URLSearchParams(window.location.search);
+        const incomingMessage = params.get('message');
+        const incomingRecipient = params.get('recipient');
+        const incomingDestination = params.get('destination');
+
+        function showSecretEnvelope(data) {
+            form.hidden = true;
+            envelopeView.hidden = false;
+            document.querySelector('.message-subtitle').hidden = true;
+            document.querySelector('.btn-home').classList.add('message-home-link');
+            document.querySelector('.letter-recipient').textContent = `Untuk ${data.recipient}`;
+            document.querySelector('.letter-message').textContent = data.message;
+        }
+
+        if (incomingMessage && incomingRecipient) {
+            showSecretEnvelope({
+                recipient: incomingRecipient,
+                message: incomingMessage
+            });
+        }
+
+        envelopeButton.addEventListener('click', function () {
+            envelopeButton.classList.add('is-open');
+            secretLetter.hidden = false;
+            envelopeButton.setAttribute('aria-expanded', 'true');
+        });
+
+        form.addEventListener('submit', async function (event) {
+            event.preventDefault();
+            const data = new FormData(form);
+            const link = new URL('message.html', window.location.href);
+            link.searchParams.set('recipient', data.get('recipient').trim());
+            link.searchParams.set('destination', data.get('destination').trim());
+            link.searchParams.set('message', data.get('message').trim());
+
+            try {
+                await navigator.clipboard.writeText(link.href);
+            } catch (error) {
+                const helper = document.createElement('textarea');
+                helper.value = link.href;
+                document.body.appendChild(helper);
+                helper.select();
+                document.execCommand('copy');
+                helper.remove();
+            }
+
+            alert('Link pesan rahasiamu sudah disalin! Kirimkan link ini ke dia.');
+        });
+
+        btnSendWA.addEventListener('click', function () {
+            if (!form.reportValidity()) return;
+
+            const data = new FormData(form);
+            const recipient = data.get('recipient').trim();
+            const destination = data.get('destination').trim();
+            const message = data.get('message').trim();
+
+            const template = [
+                'Halo Kurir Rahasia. Tolong sampaikan pesan rahasia ini:',
+                `Target / Kontak: ${destination}`,
+                `Untuk: ${recipient}`,
+                `Pesan: ${message}`
+            ].join('\n');
+
+            window.location.href = `https://wa.me/${ADMIN_WA}?text=${encodeURIComponent(template)}`;
+        });
+    </script>
+</body>
+</html>

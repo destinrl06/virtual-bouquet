@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DIY Bouquet Builder</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/builder.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,500;0,600;0,700;1,400;1,600;1,700&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600&family=Indie+Flower&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+</head>
+<body>
+<a class="builder-home-link" href="index.html">← Kembali ke Home</a>
+<div class="app-container main-container">
+    <div class="preview-panel">
+        <div id="main-card" class="main-card">
+            <div class="bouquet-stage">
+                <div id="slot-kiri" class="flower-slot slot-kiri"></div>
+                <div id="slot-tengah" class="flower-slot slot-tengah"></div>
+                <div id="slot-kanan" class="flower-slot slot-kanan"></div>
+                <img class="bouquet-ribbon" src="assets/ribbon/ribbon.png" alt="ribbon">
+                <div id="note-card" class="note-card notepaper-wrapper hidden">
+                    <img src="assets/notes/note.png" alt="note">
+                    <p id="note-text-preview"></p>
+                </div>
+            </div>
+        </div>
+        <div class="preview-actions">
+            <button class="btn-download" onclick="downloadBuket()">Download Buket</button>
+            <a href="message.html" class="btn-courier">Lanjut Kirim Pesan Rahasia 💌</a>
+        </div>
+    </div>
+
+    <div class="control-panel">
+        <h1 class="brand-title">DIY Bouquet<br><em>Builder</em></h1>
+        <p class="brand-subtitle">Pilih hingga 15 bunga favoritmu, lalu tulis pesanmu.</p>
+        <div class="section-label">PILIH BUNGAMU (MAKS. 15)</div>
+        <div class="flower-grid">
+            <div class="flower-item" onclick="pilihBunga('alcea.png', this)">Alcea</div>
+            <div class="flower-item" onclick="pilihBunga('crown.png', this)">Crown</div>
+            <div class="flower-item" onclick="pilihBunga('flitillaria.png', this)">Fritillaria</div>
+            <div class="flower-item" onclick="pilihBunga('forsythia.png', this)">Forsythia</div>
+            <div class="flower-item" onclick="pilihBunga('garbera.png', this)">Gerbera</div>
+            <div class="flower-item" onclick="pilihBunga('guzmania.png', this)">Guzmania</div>
+            <div class="flower-item" onclick="pilihBunga('hosta.png', this)">Hosta</div>
+            <div class="flower-item" onclick="pilihBunga('maltese.png', this)">Maltese</div>
+            <div class="flower-item" onclick="pilihBunga('marigold.png', this)">Marigold</div>
+            <div class="flower-item" onclick="pilihBunga('narcissus.png', this)">Narcissus</div>
+            <div class="flower-item" onclick="pilihBunga('plumeria.png', this)">Plumeria</div>
+            <div class="flower-item" onclick="pilihBunga('rose.png', this)">Rose</div>
+        </div>
+        <button class="btn-reset" onclick="resetBuket()">Reset pilihan</button>
+        <div class="section-label" style="margin-top:22px;">2. Tulis pesanmu</div>
+        <textarea id="input-note" placeholder="hai kamu..." maxlength="80"></textarea>
+    </div>
+</div>
+<script src="js/app.js"></script>
+<script src="js/note.js"></script>
+</body>
+</html>
